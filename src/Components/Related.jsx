@@ -1,16 +1,19 @@
-import { getSearchData } from "/src/Api/api";
+import { getSearchData } from "../API/api";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { storeVideo } from "/src/redux/Features/videoSlice";
+import { storeVideo } from "../redux/Features/videoSlice";
 
 const Related = ({ value }) => {
   const dispatch = useDispatch();
   const [relatedData, setRelatedData] = useState([]);
+
   function timeAgo(publishedAt) {
+    if (!publishedAt) return "";
+
     const now = new Date();
     const publishedDate = new Date(publishedAt);
-    const diff = now.getTime() - publishedDate.getTime();
+    const diff = now - publishedDate;
 
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -26,37 +29,48 @@ const Related = ({ value }) => {
     if (minutes > 0) return minutes + "m ago";
     return "just now";
   }
+
   useEffect(() => {
     const getRelatedData = async () => {
-      const data = await getSearchData(value);
-      setRelatedData(data.slice(1));
-      console.log("related data is", data);
+      try {
+        const data = await getSearchData(value);
+        if (data) {
+          setRelatedData(data.slice(1));
+        }
+      } catch (error) {
+        console.log("Error fetching related videos", error);
+      }
     };
-    getRelatedData();
+
+    if (value) getRelatedData();
   }, [value]);
+
   return (
     <div className="flex flex-col gap-3.5">
       {relatedData.map((item, idx) => {
+        const videoId = item?.id?.videoId || item?.id;
+
         return (
           <Link
             key={idx}
-            to={`/video/${item.id.videoId || item.id}`}
+            to={`/video/${videoId}`}
             onClick={() => dispatch(storeVideo(item))}
           >
-            <div className="flex flex-col space-y-2 w-full sm:w-70 sm:h-70">
+            <div className="flex flex-col space-y-2 w-full sm:w-70">
               <img
-                className="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover rounded-md"
-                src={item.snippet.thumbnails?.medium?.url}
-                alt={item.snippet?.title}
+                className="w-full h-40 object-cover rounded-md"
+                src={item?.snippet?.thumbnails?.medium?.url}
+                alt={item?.snippet?.title}
               />
-              <h2 className="text-sm sm:text-base font-semibold text-wrap">
-                {item.snippet.title}
-              </h2>
+
+              <h2 className="text-sm font-semibold">{item?.snippet?.title}</h2>
+
               <h3 className="text-xs text-gray-500">
-                {item.snippet.channelTitle}
+                {item?.snippet?.channelTitle}
               </h3>
+
               <p className="text-xs text-gray-500">
-                {timeAgo(item.snippet?.publishedAt)}
+                {timeAgo(item?.snippet?.publishedAt)}
               </p>
             </div>
           </Link>

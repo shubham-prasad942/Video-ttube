@@ -6,7 +6,7 @@ const statsUrl = "https://www.googleapis.com/youtube/v3/videos";
 const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;
 import axios from "axios";
 
-export const getSearchData = async (query: string) => {
+export const getSearchData = async (query) => {
   try {
     const res = await axios.get(url, {
       params: {
@@ -23,7 +23,7 @@ export const getSearchData = async (query: string) => {
   }
 };
 
-export const getRandomData = async (catId:string) => {
+export const getRandomData = async (catId) => {
   try {
     const res = await axios.get(randomUrl, {
       params: {
@@ -42,7 +42,7 @@ export const getRandomData = async (catId:string) => {
   }
 };
 
-export const getChannelData = async (channelId: string) => {
+export const getChannelData = async (channelId) => {
   try {
     const res = await axios.get(channelUrl, {
       params: {
@@ -57,7 +57,7 @@ export const getChannelData = async (channelId: string) => {
   }
 };
 
-export const getCommentData = async (videoId: string) => {
+export const getCommentData = async (videoId) => {
   try {
     const res = await axios.get(commentUrl, {
       params: {
@@ -75,7 +75,7 @@ export const getCommentData = async (videoId: string) => {
   }
 };
 
-export const getVideoStats = async (ids: string[]) => {
+export const getVideoStats = async (ids) => {
   try {
     const res = await axios.get(statsUrl, {
       params: {

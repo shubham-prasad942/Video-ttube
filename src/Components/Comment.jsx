@@ -3,10 +3,10 @@ import { getChannelData } from "../API/api";
 import Reactions from "./Reactions";
 
 const Comment = ({ value }) => {
-  const {channelId} = value;
-  const {videoId} = value;
+  const { channelId } = value;
+  const { videoId } = value;
   const [channelInfo, setChannelInfo] = useState(null);
-  const formatViews = (views: string) => {
+  const formatViews = (views) => {
     const num = Number(views);
     if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
     if (num >= 1000) return (num / 1000).toFixed(1) + "K";
@@ -46,7 +46,7 @@ const Comment = ({ value }) => {
           </button>
         </div>
       </div>
-      <Reactions value={videoId}/>
+      <Reactions value={videoId} />
     </div>
   );
 };
